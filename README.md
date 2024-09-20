@@ -41,23 +41,27 @@ Frameworks/Modules:
 
 ## 🌟 How to run
 <!--Remove the below lines and add yours -->
-<b>1. Clone the Repository:</b>
+**1. Fork the Repository:**
    
-   git clone https://github.com/your-username/AutoExtract.git
+   - Navigate to the [AutoExtract GitHub repository](https://github.com/pratham2402/AutoExtract) and click the "Fork" button to create your own copy of the project.
+
+<b>2. Clone the Repository:</b>
    
-   cd AutoExtract
+ - git clone https://github.com/your-username/AutoExtract.git
    
-<b>2. Edit Paths: Open the script file and update the following paths with your specific folders:</b>
+ - cd AutoExtract
+   
+<b>3. Edit Paths: Open the script file and update the following paths with your specific folders:</b>
 
     downloads_folder: The folder where your ZIP files are downloaded.
    
     unzip_to_folder: The folder where the extracted contents should go.
    
     processed_files_file: The file path to store the list of processed files.
-<b>3. Run the Script:</b> 
-You can run the script manually using - python3 AutoUnzip.py
+<b>4. Run the Script:</b> 
+ - You can run the script manually using - python3 AutoUnzip.py
 
-<b>4. Set Up as a Service (Optional):</b> To have the script run automatically at startup, you can set it up as a systemd service on Linux systems. This ensures the script starts running in the background after your system boots.
+<b>5. Set Up as a Service (Optional):</b> To have the script run automatically at startup, you can set it up as a systemd service on Linux systems. This ensures the script starts running in the background after your system boots.
 
 By following these steps, the AutoUnzip script will be up and running, automating the extraction of ZIP files in your specified directory.
 
