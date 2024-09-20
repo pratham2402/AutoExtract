@@ -1,10 +1,11 @@
 <!--Please do not remove this part-->
 ![Star Badge](https://img.shields.io/static/v1?label=%F0%9F%8C%9F&message=If%20Useful&style=style=flat&color=BC4E99)
 ![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)
+![Python](https://img.shields.io/badge/Python-3776AB.svg?style=for-the-badge&logo=Python&logoColor=white)
 
 # AutoExtract
 
-
+![](https://github.com/pratham2402/AutoExtract/blob/master/ReadMe%20Banner%20Design.png)
 
 <!--An image is an illustration for your project, the tip here is using your sense of humour as much as you can :D 
 
@@ -40,19 +41,23 @@ Frameworks/Modules:
 
 ## 🌟 How to run
 <!--Remove the below lines and add yours -->
-1. Clone the Repository:
+<b>1. Clone the Repository:</b>
    
    git clone https://github.com/your-username/AutoExtract.git
    
    cd AutoExtract
-3. Edit Paths: Open the script file and update the following paths with your specific folders:
+   
+<b>2. Edit Paths: Open the script file and update the following paths with your specific folders:</b>
 
     downloads_folder: The folder where your ZIP files are downloaded.
+   
     unzip_to_folder: The folder where the extracted contents should go.
+   
     processed_files_file: The file path to store the list of processed files.
-4. Run the Script: You can run the script manually using:
-    python3 AutoUnzip.py
-5. Set Up as a Service (Optional): To have the script run automatically at startup, you can set it up as a systemd service on Linux systems. This ensures the script starts running in the background after your system boots.
+<b>3. Run the Script:</b> 
+You can run the script manually using - python3 AutoUnzip.py
+
+<b>4. Set Up as a Service (Optional):</b> To have the script run automatically at startup, you can set it up as a systemd service on Linux systems. This ensures the script starts running in the background after your system boots.
 
 By following these steps, the AutoUnzip script will be up and running, automating the extraction of ZIP files in your specified directory.
 
