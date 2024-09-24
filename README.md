@@ -46,10 +46,12 @@ Frameworks/Modules:
    - Navigate to the [AutoExtract GitHub repository](https://github.com/pratham2402/AutoExtract) and click the "Fork" button to create your own copy of the project.
 
 <b>2. Clone the Repository:</b>
-   
- - git clone https://github.com/your-username/AutoExtract.git
-   
- - cd AutoExtract
+```
+ git clone https://github.com/your-username/AutoExtract.git
+  ```
+   ``` 
+cd AutoExtract
+ ```
    
 <b>3. Edit Paths: Open the script file and update the following paths with your specific folders:</b>
 
