@@ -52,24 +52,41 @@ Frameworks/Modules:
    ``` 
 cd AutoExtract
  ```
-   
-<b>3. Edit Paths: Open the script file and update the following paths with your specific folders:</b>
+<b>3. Install Dependencies:</b>
+  - For Windows and macOS:
+    ```
+    pip install -r requirements.txt
+    ```
+  - For Linux:
+    1. Install the required package(s):
+       ```
+       sudo apt-get update && sudo apt-get install -y unrar
+       ```
+    2. Then install the Python dependencies:
+       ```
+       pip install -r requirements.txt
+       ```
 
-    downloads_folder: The folder where your ZIP files are downloaded.
+
+<b>4. Edit Paths: Open the script file and update the following paths with your specific folders:</b>
+
+  - downloads_folder: The folder where your ZIP files are downloaded.
    
-    unzip_to_folder: The folder where the extracted contents should go.
+  - unzip_to_folder: The folder where the extracted contents should go.
    
-    processed_files_file: The file path to store the list of processed files.
-<b>4. Run the Script:</b> 
+  - processed_files_file: The file path to store the list of processed files.
+
+<b>5. Run the Script:</b> 
  - You can run the script manually using - python3 AutoUnzip.py
 
-<b>5. Set Up as a Service (Optional):</b> To have the script run automatically at startup, you can set it up as a systemd service on Linux systems. This ensures the script starts running in the background after your system boots.
+<b>6. Set Up as a Service (Optional):</b> To have the script run automatically at startup, you can set it up as a systemd service on Linux systems. This ensures the script starts running in the background after your system boots.
 
 By following these steps, the AutoUnzip script will be up and running, automating the extraction of ZIP files in your specified directory.
 
 
 <!--## 📺 Demo
 Add a Screenshot/GIF showing the sample use of the script (jpeg/png/gif).-->
+
 
 ## 🤖 Author
 <!--Remove the below lines and add yours -->
