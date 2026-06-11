@@ -10,7 +10,7 @@ Automated multi-format archive extraction daemon. Watches folders for compressed
 
 ![](https://github.com/pratham2402/AutoExtract/blob/master/ReadMe%20Banner%20Design.png)
 
-## Features
+## ✨ Features
 
 - **Multi-format support** - ZIP, RAR, 7z, Tar, Tar.gz, Tar.bz2, ISO, CAB, and more
 - **Event-driven** - Uses inotify (via watchdog) for instant extraction; falls back to polling
@@ -23,9 +23,9 @@ Automated multi-format archive extraction daemon. Watches folders for compressed
 - **Daemon-ready** - Systemd service file and Docker support included
 - **Graceful shutdown** - Signal handling for clean termination
 
-## Quick Start
+## 🚀 Quick Start
 
-### Install
+### 📥 Install
 
 ```bash
 git clone https://github.com/pratham2402/AutoExtract.git
@@ -41,7 +41,7 @@ Linux users also need the system `unrar` and `7z` binaries:
 sudo apt-get update && sudo apt-get install -y unrar p7zip-full
 ```
 
-### Configure
+### 🛠️ Configure
 
 Edit `config.yaml` or set environment variables:
 
@@ -68,7 +68,7 @@ extraction:
   max_recursion_depth: 5
 ```
 
-### Run
+### ▶️ Run
 
 ```bash
 python -m autoextract
@@ -79,7 +79,7 @@ Or use the entry point after installing:
 autoextract
 ```
 
-## Configuration Reference
+## ⚙️ Configuration Reference
 
 ### Watch section
 
@@ -125,7 +125,7 @@ Events: `extraction_start`, `extraction_success`, `extraction_failure`
 | `file` | str | `null` | Log file path (null = stdout) |
 | `format` | str | `%(asctime)s - %(name)s - %(levelname)s - %(message)s` | Log format string |
 
-## Environment Variables
+## 🔧 Environment Variables
 
 All settings can be overridden with `AUTOEXTRACT_` prefixed env vars:
 
@@ -139,7 +139,7 @@ export AUTOEXTRACT_LOG_LEVEL=DEBUG
 export AUTOEXTRACT_WEBHOOK_URL=https://hooks.example.com/notify
 ```
 
-## Systemd Service
+## 🖥️ Systemd Service
 
 ```bash
 sudo cp autoextract.service /etc/systemd/system/
@@ -149,7 +149,7 @@ sudo systemctl daemon-reload
 sudo systemctl enable --now autoextract
 ```
 
-## Docker
+## 🐳 Docker
 
 ```bash
 docker compose up -d
@@ -166,7 +166,7 @@ docker run -d \
   autoextract
 ```
 
-## Supported Formats
+## 📦 Supported Formats
 
 | Format | Extension | Backend |
 |--------|-----------|---------|
@@ -181,7 +181,7 @@ docker run -d \
 | Tar.xz | `.tar.xz`, `.txz` | stdlib `tarfile` |
 | Tar.zst | `.tar.zst`, `.tzst` | stdlib `tarfile` |
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 AutoExtract/
@@ -202,6 +202,6 @@ AutoExtract/
 └── README.md
 ```
 
-## Contributors
+## 👥 Contributors
 
 [![Contributors](https://contrib.rocks/image?repo=pratham2402/AutoExtract)](https://github.com/pratham2402/AutoExtract/graphs/contributors)
