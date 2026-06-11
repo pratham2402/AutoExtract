@@ -202,6 +202,6 @@ AutoExtract/
 └── README.md
 ```
 
-## Author
+## Contributors
 
-[pratham2402](https://github.com/pratham2402)
+[![Contributors](https://contrib.rocks/image?repo=pratham2402/AutoExtract)](https://github.com/pratham2402/AutoExtract/graphs/contributors)
