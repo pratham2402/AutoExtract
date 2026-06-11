@@ -1,0 +1,34 @@
+watch:
+  paths:
+    - ~/Downloads
+  recursive: false
+  patterns:
+    - "*.zip"
+    - "*.rar"
+    - "*.7z"
+    - "*.tar"
+    - "*.tar.gz"
+    - "*.tgz"
+    - "*.tar.bz2"
+    - "*.tbz2"
+  polling_interval: 10
+  debounce_seconds: 5.0
+
+extraction:
+  output_dir: null
+  extract_to_subfolder: true
+  delete_after: false
+  keep_on_failure: true
+  password: null
+  password_file: null
+  recursive: true
+  max_recursion_depth: 5
+
+webhooks: []
+
+logging:
+  level: "INFO"
+  file: null
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+processed_files: null

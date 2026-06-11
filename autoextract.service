@@ -1,0 +1,16 @@
+[Unit]
+Description=AutoExtract - Automatic Archive Extraction Daemon
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 -m autoextract
+WorkingDirectory=/opt/autoextract
+Restart=on-failure
+RestartSec=10
+User=%u
+Environment=PYTHONUNBUFFERED=1
+Environment=AUTOEXTRACT_CONFIG=/etc/autoextract/config.yaml
+
+[Install]
+WantedBy=multi-user.target

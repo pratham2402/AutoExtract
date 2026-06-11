@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  autoextract:
+    build: .
+    container_name: autoextract
+    restart: unless-stopped
+    environment:
+      - AUTOEXTRACT_WATCH_PATHS=/watch
+      - AUTOEXTRACT_EXTRACTION_OUTPUT_DIR=/output
+      - AUTOEXTRACT_LOG_LEVEL=INFO
+    volumes:
+      - ./config.yaml:/etc/autoextract/config.yaml:ro
+      - ~/Downloads:/watch
+      - ./extracted:/output
