@@ -221,7 +221,9 @@ def _run_setup_flow() -> dict:
 
 
 def _save_config(config: dict, config_path: str) -> None:
-    os.makedirs(os.path.dirname(config_path), exist_ok=True)
+    config_dir = os.path.dirname(os.path.abspath(config_path))
+    if config_dir and not os.path.isdir(config_dir):
+        os.makedirs(config_dir, exist_ok=True)
     with open(config_path, "w") as fh:
         yaml.safe_dump(config, fh, default_flow_style=False, allow_unicode=True, sort_keys=False)
 
@@ -249,10 +251,9 @@ def _test_extraction(config: dict) -> bool:
         dest = test_dir / test_zip.name
         shutil.copy2(test_zip, dest)
 
-        import zipfile as zfmod
         extract_dir = test_dir / "_autoextract_test"
         extract_dir.mkdir(exist_ok=True)
-        with zfmod.ZipFile(dest, "r") as zr:
+        with zipfile.ZipFile(dest, "r") as zr:
             zr.extractall(extract_dir)
 
         extracted_file = extract_dir / test_file.name

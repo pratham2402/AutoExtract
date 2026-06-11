@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import logging
-import os
 import shutil
 import zipfile
 import tarfile
@@ -46,7 +45,12 @@ def detect_format(file_path: Path) -> Optional[str]:
     except OSError:
         return None
 
-    for signature, fmt in MAGIC_SIGNATURES.items():
+    # Check longest signatures first to avoid partial matches
+    # (e.g. RAR5 8-byte signature starts with RAR4's 7-byte sequence)
+    signatures: list[tuple[bytes, str]] = sorted(
+        MAGIC_SIGNATURES.items(), key=lambda kv: len(kv[0]), reverse=True
+    )
+    for signature, fmt in signatures:
         if header.startswith(signature):
             return fmt
     return None

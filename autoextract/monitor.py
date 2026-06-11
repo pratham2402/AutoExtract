@@ -58,6 +58,8 @@ class _ArchiveHandler(FileSystemEventHandler):
         if not self._matches_pattern(file_path):
             return
         if not file_path.exists():
+            self._pending.pop(str(file_path), None)
+            self._stable_size.pop(str(file_path), None)
             return
 
         now = time.time()
@@ -66,6 +68,8 @@ class _ArchiveHandler(FileSystemEventHandler):
         try:
             current_size = file_path.stat().st_size
         except OSError:
+            self._pending.pop(key, None)
+            self._stable_size.pop(key, None)
             return
 
         prev = self._pending.get(key, 0)
@@ -82,6 +86,13 @@ class _ArchiveHandler(FileSystemEventHandler):
         else:
             self._pending[key] = now
             self._stable_size[key] = (current_size, 0)
+
+    def _cleanup_stale(self) -> None:
+        """Remove entries for files that no longer exist."""
+        stale = [k for k in self._pending if not Path(k).exists()]
+        for k in stale:
+            self._pending.pop(k, None)
+            self._stable_size.pop(k, None)
 
 
 class Monitor:
@@ -141,45 +152,60 @@ class Monitor:
             self._polling_interval,
         )
         seen: dict[str, float] = {}
+        last_cleanup = time.time()
+        cleanup_interval = 300  # purge stale entries every 5 minutes
         while self._running:
+            now = time.time()
             for watch_path in self._paths:
                 if not watch_path.is_dir():
                     continue
-                iterator = watch_path.rglob("*") if self._recursive else watch_path.glob("*")
-                for item in iterator:
-                    if not item.is_file():
-                        continue
-                    key = str(item)
-                    name = item.name.lower()
-                    matched = any(
-                        name.endswith(p.lstrip("*").lower())
-                        for p in self._patterns
-                        if p.startswith("*.")
-                    ) or any(
-                        name == p.lower() for p in self._patterns if not p.startswith("*.")
-                    )
-                    if not matched:
-                        continue
+                try:
+                    iterator = watch_path.rglob("*") if self._recursive else watch_path.glob("*")
+                    for item in iterator:
+                        if not item.is_file():
+                            continue
+                        key = str(item)
+                        name = item.name.lower()
+                        matched = any(
+                            name.endswith(p.lstrip("*").lower())
+                            for p in self._patterns
+                            if p.startswith("*.")
+                        ) or any(
+                            name == p.lower() for p in self._patterns if not p.startswith("*.")
+                        )
+                        if not matched:
+                            continue
 
-                    try:
-                        mtime = item.stat().st_mtime
-                        size = item.stat().st_size
-                    except OSError:
-                        continue
+                        try:
+                            mtime = item.stat().st_mtime
+                            size = item.stat().st_size
+                        except OSError:
+                            continue
 
-                    prev = seen.get(key)
-                    if prev is None:
-                        seen[key] = mtime
-                    elif mtime > prev:
-                        seen[key] = mtime
-                    elif mtime == prev and size > 0:
-                        stable_key = f"stable_{key}"
-                        if stable_key not in seen:
-                            seen[stable_key] = time.time()
-                        elif time.time() - seen[stable_key] > self._debounce_seconds:
+                        prev = seen.get(key)
+                        if prev is None:
                             seen[key] = mtime
-                            del seen[stable_key]
-                            logger.info("File stable, triggering extraction: %s", item.name)
-                            self._callback(item)
+                        elif mtime > prev:
+                            seen[key] = mtime
+                        elif mtime == prev and size > 0:
+                            stable_key = f"stable_{key}"
+                            if stable_key not in seen:
+                                seen[stable_key] = now
+                            elif now - seen[stable_key] > self._debounce_seconds:
+                                seen[key] = mtime
+                                del seen[stable_key]
+                                logger.info("File stable, triggering extraction: %s", item.name)
+                                self._callback(item)
+                except OSError:
+                    pass
+
+            # purge entries for files that no longer exist
+            if now - last_cleanup > cleanup_interval:
+                stale = [k for k in seen if not k.startswith("stable_")
+                          and not Path(k).exists()]
+                for k in stale:
+                    seen.pop(k, None)
+                    seen.pop(f"stable_{k}", None)
+                last_cleanup = now
 
             time.sleep(self._polling_interval)

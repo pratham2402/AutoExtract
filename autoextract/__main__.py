@@ -7,9 +7,11 @@ import logging
 import os
 import signal
 import sys
+import threading
 import time
 from pathlib import Path
 
+from autoextract import __version__
 from autoextract.config import load_config, Config
 from autoextract.extractors import (
     extract_recursive,
@@ -127,7 +129,7 @@ def main(config_path: str | None = None) -> None:
 
     config = load_config(config_path)
     logger = _setup_logging(config)
-    logger.info("AutoExtract v%s starting", __import__("autoextract").__version__)
+    logger.info("AutoExtract v%s starting", __version__)
 
     passwords = _load_passwords(config)
     logger.debug(
@@ -136,6 +138,8 @@ def main(config_path: str | None = None) -> None:
         config.watch.patterns,
         len(passwords),
     )
+
+    shutdown_event = threading.Event()
 
     monitor = Monitor(
         paths=config.watch.paths,
@@ -146,21 +150,22 @@ def main(config_path: str | None = None) -> None:
         polling_interval=config.watch.polling_interval,
     )
 
-    def _shutdown(signum: int, frame: any) -> None:
+    def _shutdown(signum: int, frame: object) -> None:
         logger.info("Received signal %d, shutting down", signum)
         monitor.stop()
+        shutdown_event.set()
 
     signal.signal(signal.SIGTERM, _shutdown)
     signal.signal(signal.SIGINT, _shutdown)
 
     try:
         monitor.start()
-        while True:
-            time.sleep(1)
+        shutdown_event.wait()
     except KeyboardInterrupt:
         pass
     finally:
         monitor.stop()
+        shutdown_event.set()
         logger.info("AutoExtract stopped")
 
 

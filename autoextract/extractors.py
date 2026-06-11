@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import sys
 import zipfile
 import tarfile
 from abc import ABC, abstractmethod
@@ -49,6 +50,16 @@ class PasswordRequiredError(ExtractionError):
 
 def _ensure_dir(path: Path) -> None:
     path.mkdir(parents=True, exist_ok=True)
+
+
+def _handle_post_extract(file_path: Path, delete_after: bool, trash_after: bool) -> None:
+    """Handle post-extraction action: trash, delete, or keep."""
+    if trash_after:
+        _get_send2trash()(str(file_path))
+        logger.info("Moved archive to trash: %s", file_path.name)
+    elif delete_after:
+        file_path.unlink()
+        logger.info("Deleted archive after extraction: %s", file_path.name)
 
 
 class ArchiveExtractor(ABC):
@@ -212,8 +223,11 @@ class TarExtractor(ArchiveExtractor):
     ) -> None:
         try:
             mode = self._resolve_mode(file_path)
+            extract_kwargs: dict = {}
+            if sys.version_info >= (3, 10, 7):
+                extract_kwargs["filter"] = "data"
             with tarfile.open(file_path, mode) as tf:
-                tf.extractall(output_dir)
+                tf.extractall(output_dir, **extract_kwargs)
             logger.info("Extracted TAR: %s -> %s", file_path.name, output_dir)
         except tarfile.TarError as exc:
             raise ExtractionError(f"Failed to extract {file_path.name}: {exc}") from exc
@@ -235,16 +249,16 @@ def _find_archives(directory: Path) -> list[Path]:
         return archives
     try:
         for item in directory.rglob("*"):
-            if item.is_symlink():
-                continue
-            if item.is_file():
-                for ext in EXTRACTORS:
-                    try:
+            try:
+                if item.is_symlink():
+                    continue
+                if item.is_file():
+                    for ext in EXTRACTORS:
                         if ext.can_handle(item):
                             archives.append(item)
                             break
-                    except Exception:
-                        pass
+            except (OSError, RuntimeError):
+                pass
     except (OSError, RuntimeError):
         logger.warning("Error scanning directory: %s", directory)
     return archives
@@ -272,12 +286,13 @@ def extract_archive(
 
     _ensure_dir(extract_dir)
 
-    suffix = file_path.suffix.lower()
+    name = file_path.name.lower()
     estimated_size = 0
 
-    if suffix == ".zip":
+    if name.endswith(".zip"):
         estimated_size, _ = check_zip_bomb_zfile(file_path, max_size, max_files)
-    elif suffix in (".tar", ".tar.gz", ".tgz", ".tar.bz2", ".tbz2", ".tar.xz"):
+    elif name.endswith((".tar", ".tar.gz", ".tgz", ".tar.bz2", ".tbz2",
+                        ".tar.xz", ".txz", ".tar.zst", ".tzst", ".tar.lz", ".tar.lzma")):
         estimated_size, _ = check_zip_bomb_tarfile(file_path, max_size, max_files)
 
     if estimated_size > 0:
@@ -287,12 +302,7 @@ def extract_archive(
         if extractor.can_handle(file_path):
             try:
                 extractor.extract(file_path, extract_dir, password=password)
-                if trash_after:
-                    _get_send2trash()(str(file_path))
-                    logger.info("Moved archive to trash: %s", file_path.name)
-                elif delete_after:
-                    file_path.unlink()
-                    logger.info("Deleted archive after extraction: %s", file_path.name)
+                _handle_post_extract(file_path, delete_after, trash_after)
                 return str(extract_dir)
             except Exception:
                 if keep_on_failure and (delete_after or trash_after):
@@ -311,12 +321,7 @@ def extract_archive(
             if extractor.can_handle(Path(f"dummy.{detected}")):
                 try:
                     extractor.extract(file_path, extract_dir, password=password)
-                    if trash_after:
-                        _get_send2trash()(str(file_path))
-                        logger.info("Moved archive to trash: %s", file_path.name)
-                    elif delete_after:
-                        file_path.unlink()
-                        logger.info("Deleted archive after extraction: %s", file_path.name)
+                    _handle_post_extract(file_path, delete_after, trash_after)
                     return str(extract_dir)
                 except Exception:
                     if keep_on_failure and (delete_after or trash_after):

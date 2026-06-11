@@ -16,3 +16,9 @@ processed_files.txt
 *.swp
 *.swo
 *~
+
+# PyInstaller
+dist/
+build/
+*.spec
+autoextract.spec
