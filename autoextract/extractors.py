@@ -287,6 +287,30 @@ def extract_archive(
                         file_path.name,
                     )
                 raise
+    detected = detect_format(file_path)
+    if detected:
+        logger.info(
+            "Detected format '%s' for %s, trying fallback extractors",
+            detected, file_path.name,
+        )
+        for extractor in EXTRACTORS:
+            if extractor.can_handle(Path(f"dummy.{detected}")):
+                try:
+                    extractor.extract(file_path, extract_dir, password=password)
+                    if trash_after:
+                        send2trash(str(file_path))
+                        logger.info("Moved archive to trash: %s", file_path.name)
+                    elif delete_after:
+                        file_path.unlink()
+                        logger.info("Deleted archive after extraction: %s", file_path.name)
+                    return str(extract_dir)
+                except Exception:
+                    if keep_on_failure and (delete_after or trash_after):
+                        logger.warning(
+                            "Extraction failed, keeping archive (keep_on_failure=true): %s",
+                            file_path.name,
+                        )
+                    raise
     raise ExtractionError(f"No extractor found for: {file_path.name}")
 
 
