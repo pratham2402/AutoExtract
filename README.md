@@ -68,15 +68,24 @@ extraction:
   max_recursion_depth: 5
 ```
 
+### 🪄 Setup Wizard
+
+The fastest way to get started — interactive prompts, no YAML editing:
+
+```bash
+autoextract setup
+```
+
 ### ▶️ Run
 
 ```bash
-python -m autoextract
+autoextract
 ```
 
-Or use the entry point after installing:
+Or with a custom config:
+
 ```bash
-autoextract
+autoextract --config /path/to/config.yaml
 ```
 
 ## ⚙️ Configuration Reference
@@ -191,7 +200,8 @@ AutoExtract/
 │   ├── config.py         # YAML + env var configuration
 │   ├── extractors.py     # Multi-format extraction engine
 │   ├── monitor.py        # Watchdog + polling folder monitor
-│   └── webhooks.py       # HTTP notification callbacks
+│   ├── webhooks.py       # HTTP notification callbacks
+│   └── cli_setup.py      # Interactive terminal setup wizard
 ├── config.yaml           # Default configuration
 ├── setup.py              # Package installer
 ├── Dockerfile
