@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 import logging
 import os
 import signal
@@ -118,10 +119,10 @@ def _process_archive(file_path: Path, config: Config) -> None:
         )
 
 
-def main() -> None:
+def main(config_path: str | None = None) -> None:
     global logger
 
-    config = load_config()
+    config = load_config(config_path)
     logger = _setup_logging(config)
     logger.info("AutoExtract v%s starting", __import__("autoextract").__version__)
 
@@ -161,4 +162,16 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description="AutoExtract daemon")
+    parser.add_argument(
+        "--config", "-c", type=str, default=None, help="Path to config file"
+    )
+    sub = parser.add_subparsers(dest="command")
+    sub.add_parser("setup", help="Run interactive setup wizard")
+    args = parser.parse_args()
+
+    if args.command == "setup":
+        from autoextract.cli_setup import run_setup
+        run_setup()
+    else:
+        main(config_path=args.config)
