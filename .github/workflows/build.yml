@@ -5,6 +5,9 @@ on:
     tags: ["v*"]
   workflow_dispatch:
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 jobs:
   build:
     name: ${{ matrix.os }} ${{ matrix.arch }}
@@ -33,49 +36,61 @@ jobs:
       - name: Install system dependencies (Linux)
         if: runner.os == 'Linux'
         run: |
-          sudo apt-get update
-          sudo apt-get install -y unrar p7zip-full
+          sudo apt-get update -qq
+          sudo apt-get install -y unrar p7zip-full 2>/dev/null || true
 
       - name: Install system dependencies (macOS)
         if: runner.os == 'macOS'
         run: |
-          brew install unrar p7zip
+          brew install p7zip 2>/dev/null || true
 
       - name: Install system dependencies (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          choco install unrar 7zip -y
+          choco install 7zip -y 2>$null; exit 0
 
       - name: Install Python dependencies
         run: |
           pip install -e ".[full]"
           pip install pyinstaller
 
-      - name: Build binary
-        run: |
-          pyinstaller `
-            --noconfirm --clean --onefile `
-            --name "autoextract-${{ matrix.target }}-${{ matrix.arch }}" `
-            --hidden-import send2trash `
-            --hidden-import py7zr `
-            --hidden-import rarfile `
-            --hidden-import requests `
-            --hidden-import watchdog `
-            --exclude-module tkinter `
-            --exclude-module matplotlib `
-            --exclude-module numpy `
-            --exclude-module setuptools `
-            --exclude-module pip `
-            autoextract/__main__.py
-        shell: bash
+      - name: Build binary (Linux/macOS)
         if: runner.os != 'Windows'
+        run: >
+          pyinstaller
+          --noconfirm --clean --onefile
+          --name "autoextract-${{ matrix.target }}-${{ matrix.arch }}"
+          --hidden-import send2trash
+          --hidden-import py7zr
+          --hidden-import rarfile
+          --hidden-import requests
+          --hidden-import watchdog
+          --exclude-module tkinter
+          --exclude-module matplotlib
+          --exclude-module numpy
+          --exclude-module setuptools
+          --exclude-module pip
+          autoextract/__main__.py
 
       - name: Build binary (Windows)
-        run: |
-          pyinstaller --noconfirm --clean --onefile --name "autoextract-${{ matrix.target }}-${{ matrix.arch }}" --hidden-import send2trash --hidden-import py7zr --hidden-import rarfile --hidden-import requests --hidden-import watchdog --exclude-module tkinter --exclude-module matplotlib --exclude-module numpy --exclude-module setuptools --exclude-module pip autoextract/__main__.py
-        shell: pwsh
         if: runner.os == 'Windows'
+        shell: pwsh
+        run: >
+          pyinstaller
+          --noconfirm --clean --onefile
+          --name "autoextract-${{ matrix.target }}-${{ matrix.arch }}"
+          --hidden-import send2trash
+          --hidden-import py7zr
+          --hidden-import rarfile
+          --hidden-import requests
+          --hidden-import watchdog
+          --exclude-module tkinter
+          --exclude-module matplotlib
+          --exclude-module numpy
+          --exclude-module setuptools
+          --exclude-module pip
+          autoextract/__main__.py
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -96,9 +111,6 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           path: artifacts
-
-      - name: List artifacts
-        run: find artifacts -type f -exec ls -lh {} \;
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
