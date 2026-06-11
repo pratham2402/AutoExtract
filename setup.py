@@ -42,7 +42,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "autoextract=autoextract.__main__:main",
+            "autoextract=autoextract.__main__:entry",
         ],
     },
 )

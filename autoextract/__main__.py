@@ -161,7 +161,11 @@ def main(config_path: str | None = None) -> None:
         logger.info("AutoExtract stopped")
 
 
-if __name__ == "__main__":
+def _run_daemon(config_path: str | None = None) -> None:
+    main(config_path=config_path)
+
+
+def entry() -> None:
     parser = argparse.ArgumentParser(description="AutoExtract daemon")
     parser.add_argument(
         "--config", "-c", type=str, default=None, help="Path to config file"
@@ -173,5 +177,11 @@ if __name__ == "__main__":
     if args.command == "setup":
         from autoextract.cli_setup import run_setup
         run_setup()
+    elif args.command is None:
+        _run_daemon(config_path=args.config)
     else:
-        main(config_path=args.config)
+        parser.print_help()
+
+
+if __name__ == "__main__":
+    entry()
