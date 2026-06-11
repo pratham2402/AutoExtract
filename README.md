@@ -1,8 +1,8 @@
-[![Made with Python](https://forthebadge.com/api/badges/generate?primaryLabel=MADE+WITH&secondaryLabel=PYTHON&primaryBGColor=%23245bb8&secondaryBGColor=%23ffd034&primaryIcon=python&primaryIconColor=%23ffffff)](https://python.org)
-[![Open Source](https://forthebadge.com/api/badges/generate?primaryLabel=OPEN&secondaryLabel=SOURCE&primaryBGColor=%23ffd034&secondaryBGColor=%23245bb8)](https://github.com/pratham2402/AutoExtract)
-[![MIT License](https://forthebadge.com/api/badges/generate?primaryLabel=MIT&secondaryLabel=LICENSE&primaryBGColor=%23245bb8&secondaryBGColor=%23ffd034)](https://github.com/pratham2402/AutoExtract/blob/master/LICENSE)
-[![Docker Ready](https://forthebadge.com/api/badges/generate?primaryLabel=DOCKER&secondaryLabel=READY&primaryBGColor=%23245bb8&secondaryBGColor=%23ffd034&primaryIcon=docker&primaryIconColor=%23ffffff)](https://docker.com)
-[![Version 2.0.0](https://forthebadge.com/api/badges/generate?primaryLabel=VERSION&secondaryLabel=2.0.0&primaryBGColor=%23ffd034&secondaryBGColor=%23245bb8)](https://github.com/pratham2402/AutoExtract/releases)
+[![Made with Python](https://forthebadge.com/api/badges/generate?primaryLabel=MADE+WITH&secondaryLabel=PYTHON&primaryBGColor=%23306998&secondaryBGColor=%23ffd43b&primaryIcon=python&primaryIconColor=%23ffffff)](https://python.org)
+[![Open Source](https://forthebadge.com/api/badges/generate?primaryLabel=OPEN&secondaryLabel=SOURCE&primaryBGColor=%232ea44f&secondaryBGColor=%231b4332)](https://github.com/pratham2402/AutoExtract)
+[![MIT License](https://forthebadge.com/api/badges/generate?primaryLabel=MIT&secondaryLabel=LICENSE&primaryBGColor=%237c3aed&secondaryBGColor=%234c1d95)](https://github.com/pratham2402/AutoExtract/blob/master/LICENSE)
+[![Docker Ready](https://forthebadge.com/api/badges/generate?primaryLabel=DOCKER&secondaryLabel=READY&primaryBGColor=%230db7ed&secondaryBGColor=%231e3a5f&primaryIcon=docker&primaryIconColor=%23ffffff)](https://docker.com)
+[![Version 2.0.0](https://forthebadge.com/api/badges/generate?primaryLabel=VERSION&secondaryLabel=2.0.0&primaryBGColor=%23e01e5a&secondaryBGColor=%23ffd034)](https://github.com/pratham2402/AutoExtract/releases)
 
 # AutoExtract
 
