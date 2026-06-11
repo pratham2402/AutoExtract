@@ -12,16 +12,16 @@ Automated multi-format archive extraction daemon. Watches folders for compressed
 
 ## Features
 
-- **Multi-format support** -- ZIP, RAR, 7z, Tar, Tar.gz, Tar.bz2, ISO, CAB, and more
-- **Event-driven** -- Uses inotify (via watchdog) for instant extraction; falls back to polling
-- **Recursive extraction** -- Finds and extracts archives nested within archives
-- **Password support** -- Password-protected archives via config or password file
-- **Webhook notifications** -- Get notified on extraction success/failure via HTTP webhooks
-- **Configurable** -- YAML config file with environment variable overrides
-- **Trash after extract** -- Move archives to system Trash after successful extraction (safer than permanent delete)
-- **Subfolder extraction** -- Each archive extracted into its own folder
-- **Daemon-ready** -- Systemd service file and Docker support included
-- **Graceful shutdown** -- Signal handling for clean termination
+- **Multi-format support** - ZIP, RAR, 7z, Tar, Tar.gz, Tar.bz2, ISO, CAB, and more
+- **Event-driven** - Uses inotify (via watchdog) for instant extraction; falls back to polling
+- **Recursive extraction** - Finds and extracts archives nested within archives
+- **Password support** - Password-protected archives via config or password file
+- **Webhook notifications** - Get notified on extraction success/failure via HTTP webhooks
+- **Configurable** - YAML config file with environment variable overrides
+- **Trash after extract** - Move archives to system Trash after successful extraction (safer than permanent delete)
+- **Subfolder extraction** - Each archive extracted into its own folder
+- **Daemon-ready** - Systemd service file and Docker support included
+- **Graceful shutdown** - Signal handling for clean termination
 
 ## Quick Start
 
