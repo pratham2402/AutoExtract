@@ -1,8 +1,8 @@
-![Python](https://img.shields.io/badge/Python-3.10%2B-245bb8.svg?style=flat&logo=Python&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-245bb8.svg?style=flat)
-![Platform](https://img.shields.io/badge/Platform-Linux%20%7C%20macOS%20%7C%20Windows-245bb8.svg?style=flat)
-![Docker](https://img.shields.io/badge/Docker-Ready-245bb8.svg?style=flat&logo=Docker&logoColor=white)
-![Version](https://img.shields.io/badge/Version-2.0.0-ffd034.svg?style=flat)
+[![Made with Python](https://forthebadge.com/api/badges/generate?primaryLabel=MADE+WITH&secondaryLabel=PYTHON&primaryBGColor=%23245bb8&secondaryBGColor=%23ffd034&primaryIcon=python&primaryIconColor=%23ffffff)](https://python.org)
+[![Open Source](https://forthebadge.com/api/badges/generate?primaryLabel=OPEN&secondaryLabel=SOURCE&primaryBGColor=%23ffd034&secondaryBGColor=%23245bb8)](https://github.com/pratham2402/AutoExtract)
+[![MIT License](https://forthebadge.com/api/badges/generate?primaryLabel=MIT&secondaryLabel=LICENSE&primaryBGColor=%23245bb8&secondaryBGColor=%23ffd034)](https://github.com/pratham2402/AutoExtract/blob/master/LICENSE)
+[![Docker Ready](https://forthebadge.com/api/badges/generate?primaryLabel=DOCKER&secondaryLabel=READY&primaryBGColor=%23245bb8&secondaryBGColor=%23ffd034&primaryIcon=docker&primaryIconColor=%23ffffff)](https://docker.com)
+[![Version 2.0.0](https://forthebadge.com/api/badges/generate?primaryLabel=VERSION&secondaryLabel=2.0.0&primaryBGColor=%23ffd034&secondaryBGColor=%23245bb8)](https://github.com/pratham2402/AutoExtract/releases)
 
 # AutoExtract
 
