@@ -57,6 +57,7 @@ class ExtractionConfig:
     output_dir: Optional[str] = None
     extract_to_subfolder: bool = True
     delete_after: bool = False
+    trash_after: bool = False
     keep_on_failure: bool = True
     password: Optional[str] = None
     password_file: Optional[str] = None
@@ -69,6 +70,7 @@ class ExtractionConfig:
             output_dir=data.get("output_dir"),
             extract_to_subfolder=_parse_bool(data.get("extract_to_subfolder", True)),
             delete_after=_parse_bool(data.get("delete_after", False)),
+            trash_after=_parse_bool(data.get("trash_after", False)),
             keep_on_failure=_parse_bool(data.get("keep_on_failure", True)),
             password=data.get("password"),
             password_file=data.get("password_file"),

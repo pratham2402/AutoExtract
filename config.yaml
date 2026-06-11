@@ -18,6 +18,7 @@ extraction:
   output_dir: null
   extract_to_subfolder: true
   delete_after: false
+  trash_after: false
   keep_on_failure: true
   password: null
   password_file: null

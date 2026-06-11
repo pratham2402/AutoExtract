@@ -36,6 +36,7 @@ setup(
         "requests>=2.31.0",
         "rarfile>=4.1",
         "py7zr>=0.21.0",
+        "send2trash>=1.8.0",
     ],
     entry_points={
         "console_scripts": [

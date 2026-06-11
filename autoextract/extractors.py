@@ -12,6 +12,8 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Optional
 
+from send2trash import send2trash
+
 import py7zr
 
 logger = logging.getLogger(__name__)
@@ -217,6 +219,7 @@ def extract_archive(
     output_dir: Path,
     extract_to_subfolder: bool = True,
     delete_after: bool = False,
+    trash_after: bool = False,
     keep_on_failure: bool = True,
     password: Optional[str] = None,
 ) -> str:
@@ -234,12 +237,15 @@ def extract_archive(
         if extractor.can_handle(file_path):
             try:
                 extractor.extract(file_path, extract_dir, password=password)
-                if delete_after:
+                if trash_after:
+                    send2trash(str(file_path))
+                    logger.info("Moved archive to trash: %s", file_path.name)
+                elif delete_after:
                     file_path.unlink()
                     logger.info("Deleted archive after extraction: %s", file_path.name)
                 return str(extract_dir)
             except Exception:
-                if keep_on_failure and delete_after:
+                if keep_on_failure and (delete_after or trash_after):
                     logger.warning(
                         "Extraction failed, keeping archive (keep_on_failure=true): %s",
                         file_path.name,
@@ -253,6 +259,7 @@ def extract_recursive(
     output_dir: Path,
     extract_to_subfolder: bool = True,
     delete_after: bool = False,
+    trash_after: bool = False,
     keep_on_failure: bool = True,
     password: Optional[str] = None,
     passwords: Optional[list[str]] = None,
@@ -277,6 +284,7 @@ def extract_recursive(
                 output_dir,
                 extract_to_subfolder=extract_to_subfolder,
                 delete_after=delete_after,
+                trash_after=trash_after,
                 keep_on_failure=keep_on_failure,
                 password=pwd,
             )
@@ -307,6 +315,7 @@ def extract_recursive(
                     archive.parent,
                     extract_to_subfolder=extract_to_subfolder,
                     delete_after=delete_after,
+                    trash_after=trash_after,
                     keep_on_failure=keep_on_failure,
                     password=password,
                     passwords=passwords,

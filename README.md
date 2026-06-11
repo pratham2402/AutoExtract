@@ -62,6 +62,7 @@ watch:
 extraction:
   extract_to_subfolder: true
   delete_after: false
+  trash_after: false
   recursive: true
   max_recursion_depth: 5
 ```
@@ -95,8 +96,9 @@ autoextract
 |-----|------|---------|-------------|
 | `output_dir` | str | `null` | Extraction target directory (null = same as source) |
 | `extract_to_subfolder` | bool | `true` | Create subfolder named after archive |
-| `delete_after` | bool | `false` | Delete archive after successful extraction |
-| `keep_on_failure` | bool | `true` | Keep archive if extraction fails (only relevant with delete_after) |
+| `delete_after` | bool | `false` | Permanently delete archive after successful extraction |
+| `trash_after` | bool | `false` | Move archive to system Trash after successful extraction (safer than delete) |
+| `keep_on_failure` | bool | `true` | Keep archive if extraction fails (only relevant with delete_after/trash_after) |
 | `password` | str | `null` | Global password for encrypted archives |
 | `password_file` | str | `null` | Path to file with passwords to try (one per line) |
 | `recursive` | bool | `true` | Extract archives found within extracted content |

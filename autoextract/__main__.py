@@ -73,6 +73,7 @@ def _process_archive(file_path: Path, config: Config) -> None:
             output_dir,
             extract_to_subfolder=config.extraction.extract_to_subfolder,
             delete_after=config.extraction.delete_after,
+            trash_after=config.extraction.trash_after,
             keep_on_failure=config.extraction.keep_on_failure,
             password=config.extraction.password,
             passwords=passwords,
