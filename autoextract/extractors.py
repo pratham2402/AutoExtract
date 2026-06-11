@@ -7,7 +7,6 @@ import os
 import shutil
 import zipfile
 import tarfile
-import tempfile
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Optional
@@ -84,12 +83,12 @@ class RarExtractor(ArchiveExtractor):
         output_dir: Path,
         password: Optional[str] = None,
     ) -> None:
+        rf = None
         try:
             rf = self._rarfile.RarFile(file_path)
             if rf.needs_password() and password:
                 rf.setpassword(password)
             rf.extractall(output_dir)
-            rf.close()
             logger.info("Extracted RAR: %s -> %s", file_path.name, output_dir)
         except self._rarfile.NeedFirstVol as exc:
             raise ExtractionError(
@@ -101,6 +100,9 @@ class RarExtractor(ArchiveExtractor):
             ) from exc
         except Exception as exc:
             raise ExtractionError(f"Failed to extract {file_path.name}: {exc}") from exc
+        finally:
+            if rf is not None:
+                rf.close()
 
 
 class SevenZipExtractor(ArchiveExtractor):
@@ -173,7 +175,12 @@ class TarExtractor(ArchiveExtractor):
         if name.endswith(".tar"):
             return "r:"
         suffix = file_path.suffix.lower()
-        return self._tar_mode_map.get(suffix, "r:*")
+        mode = self._tar_mode_map.get(suffix)
+        if mode is None:
+            raise ExtractionError(
+                f"Unable to determine compression for: {file_path.name}"
+            )
+        return mode
 
     def extract(
         self,
@@ -202,15 +209,22 @@ EXTRACTORS: list[ArchiveExtractor] = [
 
 def _find_archives(directory: Path) -> list[Path]:
     archives: list[Path] = []
-    for item in directory.rglob("*"):
-        if item.is_file():
-            for ext in EXTRACTORS:
-                try:
-                    if ext.can_handle(item):
-                        archives.append(item)
-                        break
-                except Exception:
-                    pass
+    if not directory.is_dir():
+        return archives
+    try:
+        for item in directory.rglob("*"):
+            if item.is_symlink():
+                continue
+            if item.is_file():
+                for ext in EXTRACTORS:
+                    try:
+                        if ext.can_handle(item):
+                            archives.append(item)
+                            break
+                    except Exception:
+                        pass
+    except (OSError, RuntimeError):
+        logger.warning("Error scanning directory: %s", directory)
     return archives
 
 

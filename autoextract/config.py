@@ -15,13 +15,6 @@ logger = logging.getLogger(__name__)
 ENV_PREFIX = "AUTOEXTRACT_"
 
 
-def _env_override(key: str, default: any = None) -> any:
-    value = os.environ.get(f"{ENV_PREFIX}{key.upper()}")
-    if value is None:
-        return default
-    return value
-
-
 def _parse_bool(value: str | bool) -> bool:
     if isinstance(value, bool):
         return value
