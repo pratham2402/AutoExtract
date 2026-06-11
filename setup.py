@@ -37,6 +37,8 @@ setup(
         "rarfile>=4.1",
         "py7zr>=0.21.0",
         "send2trash>=1.8.0",
+        "rich>=13.0.0",
+        "questionary>=2.0.0",
     ],
     entry_points={
         "console_scripts": [
