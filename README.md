@@ -1,26 +1,27 @@
-![Star Badge](https://img.shields.io/static/v1?label=%F0%9F%8C%9F&message=If%20Useful&style=style=flat&color=BC4E99)
-![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)
-![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB.svg?style=for-the-badge&logo=Python&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-blue.svg)
+![Python](https://img.shields.io/badge/Python-3.10%2B-245bb8.svg?style=flat&logo=Python&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-245bb8.svg?style=flat)
+![Platform](https://img.shields.io/badge/Platform-Linux%20%7C%20macOS%20%7C%20Windows-245bb8.svg?style=flat)
+![Docker](https://img.shields.io/badge/Docker-Ready-245bb8.svg?style=flat&logo=Docker&logoColor=white)
+![Version](https://img.shields.io/badge/Version-2.0.0-ffd034.svg?style=flat)
 
 # AutoExtract
 
-Automated multi-format archive extraction daemon. Watches folders for compressed archives and extracts them automatically — no manual unzipping required.
+Automated multi-format archive extraction daemon. Watches folders for compressed archives and extracts them automatically with no manual unzipping required.
 
 ![](https://github.com/pratham2402/AutoExtract/blob/master/ReadMe%20Banner%20Design.png)
 
 ## Features
 
-- **Multi-format support** — ZIP, RAR, 7z, Tar, Tar.gz, Tar.bz2, ISO, CAB, and more
-- **Event-driven** — Uses inotify (via watchdog) for instant extraction; falls back to polling
-- **Recursive extraction** — Finds and extracts archives nested within archives
-- **Password support** — Password-protected archives via config or password file
-- **Webhook notifications** — Get notified on extraction success/failure via HTTP webhooks
-- **Configurable** — YAML config file with environment variable overrides
-- **Delete after extract** — Optionally remove archives after successful extraction
-- **Subfolder extraction** — Each archive extracted into its own folder
-- **Daemon-ready** — Systemd service file and Docker support included
-- **Graceful shutdown** — Signal handling for clean termination
+- **Multi-format support** -- ZIP, RAR, 7z, Tar, Tar.gz, Tar.bz2, ISO, CAB, and more
+- **Event-driven** -- Uses inotify (via watchdog) for instant extraction; falls back to polling
+- **Recursive extraction** -- Finds and extracts archives nested within archives
+- **Password support** -- Password-protected archives via config or password file
+- **Webhook notifications** -- Get notified on extraction success/failure via HTTP webhooks
+- **Configurable** -- YAML config file with environment variable overrides
+- **Trash after extract** -- Move archives to system Trash after successful extraction (safer than permanent delete)
+- **Subfolder extraction** -- Each archive extracted into its own folder
+- **Daemon-ready** -- Systemd service file and Docker support included
+- **Graceful shutdown** -- Signal handling for clean termination
 
 ## Quick Start
 
@@ -203,4 +204,4 @@ AutoExtract/
 
 ## Author
 
-[Pratham Sardana](https://github.com/pratham2402)
+[pratham2402](https://github.com/pratham2402)

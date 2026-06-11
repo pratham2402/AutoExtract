@@ -1,4 +1,4 @@
-"""Entry point for AutoExtract — run with `python -m autoextract`."""
+"""Entry point for AutoExtract. Run with `python -m autoextract`."""
 
 from __future__ import annotations
 
@@ -107,7 +107,7 @@ def _process_archive(file_path: Path, config: Config) -> None:
         )
     except ExtractionError as exc:
         duration_ms = (time.monotonic() - t0) * 1000
-        logger.error("Extraction failed: %s — %s", archive_name, exc)
+        logger.error("Extraction failed: %s -- %s", archive_name, exc)
         notify(
             config.webhooks,
             "extraction_failure",

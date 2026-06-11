@@ -6,8 +6,8 @@ with open("README.md", "r") as fh:
 setup(
     name="autoextract",
     version="2.0.0",
-    author="Pratham Sardana",
-    author_email="pratham2402@gmail.com",
+    author="pratham2402",
+    author_email="pratham2402@users.noreply.github.com",
     description="Automated multi-format archive extraction daemon",
     long_description=long_description,
     long_description_content_type="text/markdown",
