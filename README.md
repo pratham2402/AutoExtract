@@ -113,6 +113,9 @@ autoextract --config /path/to/config.yaml
 | `password_file` | str | `null` | Path to file with passwords to try (one per line) |
 | `recursive` | bool | `true` | Extract archives found within extracted content |
 | `max_recursion_depth` | int | `5` | Maximum nesting depth for recursive extraction |
+| `max_extracted_size` | int | `53687091200` | Max total uncompressed bytes before aborting (default 50 GB) |
+| `max_file_count` | int | `10000` | Max files in a single archive before aborting |
+| `min_free_space` | int | `1073741824` | Minimum free disk space required before extraction (default 1 GB) |
 
 ### Webhooks section
 

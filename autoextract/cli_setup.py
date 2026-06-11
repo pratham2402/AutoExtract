@@ -216,7 +216,6 @@ def _run_setup_flow() -> dict:
         "file": None,
         "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     }
-    config["processed_files"] = None
 
     return config
 

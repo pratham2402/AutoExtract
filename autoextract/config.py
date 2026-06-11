@@ -116,7 +116,6 @@ class Config:
     extraction: ExtractionConfig = field(default_factory=ExtractionConfig)
     webhooks: list[WebhookConfig] = field(default_factory=list)
     logging: LoggingConfig = field(default_factory=LoggingConfig)
-    processed_files: Optional[str] = None
 
     @classmethod
     def from_dict(cls, data: dict) -> "Config":
@@ -127,7 +126,6 @@ class Config:
             extraction=ExtractionConfig.from_dict(data.get("extraction", {})),
             webhooks=webhooks,
             logging=LoggingConfig.from_dict(data.get("logging", {})),
-            processed_files=data.get("processed_files"),
         )
 
 

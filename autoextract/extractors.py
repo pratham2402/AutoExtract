@@ -3,8 +3,6 @@
 from __future__ import annotations
 
 import logging
-import os
-import shutil
 import zipfile
 import tarfile
 from abc import ABC, abstractmethod
@@ -36,7 +34,6 @@ from autoextract.security import (
     check_zip_bomb_tarfile,
     check_disk_space,
     detect_format,
-    SecurityError,
 )
 
 logger = logging.getLogger(__name__)

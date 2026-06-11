@@ -34,5 +34,3 @@ logging:
   level: "INFO"
   file: null
   format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-
-processed_files: null
