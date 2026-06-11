@@ -31,15 +31,25 @@ setup(
     ],
     python_requires=">=3.10",
     install_requires=[
-        "watchdog>=6.0.0",
         "PyYAML>=6.0",
-        "requests>=2.31.0",
-        "rarfile>=4.1",
-        "py7zr>=0.21.0",
-        "send2trash>=1.8.0",
-        "rich>=13.0.0",
-        "questionary>=2.0.0",
     ],
+    extras_require={
+        "full": [
+            "watchdog>=6.0.0",
+            "requests>=2.31.0",
+            "rarfile>=4.1",
+            "py7zr>=0.21.0",
+            "send2trash>=1.8.0",
+            "rich>=13.0.0",
+            "questionary>=2.0.0",
+        ],
+        "watchdog": ["watchdog>=6.0.0"],
+        "rar": ["rarfile>=4.1"],
+        "7z": ["py7zr>=0.21.0"],
+        "webhooks": ["requests>=2.31.0"],
+        "trash": ["send2trash>=1.8.0"],
+        "setup": ["rich>=13.0.0", "questionary>=2.0.0"],
+    },
     entry_points={
         "console_scripts": [
             "autoextract=autoextract.__main__:entry",

@@ -7,11 +7,19 @@ import time
 from datetime import datetime, timezone
 from typing import Optional
 
-import requests
-
 from autoextract.config import WebhookConfig
 
 logger = logging.getLogger(__name__)
+
+_requests = None
+
+
+def _get_requests():
+    global _requests
+    if _requests is None:
+        import requests as _r
+        _requests = _r
+    return _requests
 
 
 def _build_payload(event: str, data: dict) -> dict:
@@ -23,6 +31,7 @@ def _build_payload(event: str, data: dict) -> dict:
 
 
 def _send_webhook(config: WebhookConfig, payload: dict) -> bool:
+    requests = _get_requests()
     for attempt in range(1, config.retries + 1):
         try:
             response = requests.post(

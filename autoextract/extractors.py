@@ -11,9 +11,25 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Optional
 
-from send2trash import send2trash
+_send2trash = None
+_py7zr = None
 
-import py7zr
+
+def _get_send2trash():
+    global _send2trash
+    if _send2trash is None:
+        from send2trash import send2trash as _s2t
+        _send2trash = _s2t
+    return _send2trash
+
+
+def _get_py7zr():
+    global _py7zr
+    if _py7zr is None:
+        import py7zr as _p7
+        _py7zr = _p7
+    return _py7zr
+
 
 from autoextract.security import (
     check_zip_bomb_zfile,
@@ -125,6 +141,7 @@ class SevenZipExtractor(ArchiveExtractor):
         output_dir: Path,
         password: Optional[str] = None,
     ) -> None:
+        py7zr = _get_py7zr()
         try:
             with py7zr.SevenZipFile(
                 file_path, mode="r", password=password
@@ -274,7 +291,7 @@ def extract_archive(
             try:
                 extractor.extract(file_path, extract_dir, password=password)
                 if trash_after:
-                    send2trash(str(file_path))
+                    _get_send2trash()(str(file_path))
                     logger.info("Moved archive to trash: %s", file_path.name)
                 elif delete_after:
                     file_path.unlink()
@@ -298,7 +315,7 @@ def extract_archive(
                 try:
                     extractor.extract(file_path, extract_dir, password=password)
                     if trash_after:
-                        send2trash(str(file_path))
+                        _get_send2trash()(str(file_path))
                         logger.info("Moved archive to trash: %s", file_path.name)
                     elif delete_after:
                         file_path.unlink()
