@@ -15,6 +15,14 @@ from send2trash import send2trash
 
 import py7zr
 
+from autoextract.security import (
+    check_zip_bomb_zfile,
+    check_zip_bomb_tarfile,
+    check_disk_space,
+    detect_format,
+    SecurityError,
+)
+
 logger = logging.getLogger(__name__)
 
 
@@ -236,6 +244,9 @@ def extract_archive(
     trash_after: bool = False,
     keep_on_failure: bool = True,
     password: Optional[str] = None,
+    max_size: int = 50 * 1024 * 1024 * 1024,
+    max_files: int = 10000,
+    min_free_space: int = 1024 * 1024 * 1024,
 ) -> str:
     if extract_to_subfolder:
         stem = file_path.stem
@@ -246,6 +257,17 @@ def extract_archive(
         extract_dir = output_dir
 
     _ensure_dir(extract_dir)
+
+    suffix = file_path.suffix.lower()
+    estimated_size = 0
+
+    if suffix == ".zip":
+        estimated_size, _ = check_zip_bomb_zfile(file_path, max_size, max_files)
+    elif suffix in (".tar", ".tar.gz", ".tgz", ".tar.bz2", ".tbz2", ".tar.xz"):
+        estimated_size, _ = check_zip_bomb_tarfile(file_path, max_size, max_files)
+
+    if estimated_size > 0:
+        check_disk_space(extract_dir, estimated_size, min_free_space)
 
     for extractor in EXTRACTORS:
         if extractor.can_handle(file_path):
@@ -278,6 +300,9 @@ def extract_recursive(
     password: Optional[str] = None,
     passwords: Optional[list[str]] = None,
     max_depth: int = 5,
+    max_size: int = 50 * 1024 * 1024 * 1024,
+    max_files: int = 10000,
+    min_free_space: int = 1024 * 1024 * 1024,
     _depth: int = 0,
 ) -> list[str]:
     if _depth >= max_depth:
@@ -301,6 +326,9 @@ def extract_recursive(
                 trash_after=trash_after,
                 keep_on_failure=keep_on_failure,
                 password=pwd,
+                max_size=max_size,
+                max_files=max_files,
+                min_free_space=min_free_space,
             )
             extracted_paths.append(target)
             last_error = None
@@ -334,6 +362,9 @@ def extract_recursive(
                     password=password,
                     passwords=passwords,
                     max_depth=max_depth,
+                    max_size=max_size,
+                    max_files=max_files,
+                    min_free_space=min_free_space,
                     _depth=_depth + 1,
                 )
             )

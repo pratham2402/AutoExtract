@@ -79,6 +79,9 @@ def _process_archive(file_path: Path, config: Config) -> None:
             password=config.extraction.password,
             passwords=passwords,
             max_depth=config.extraction.max_recursion_depth,
+            max_size=config.extraction.max_extracted_size,
+            max_files=config.extraction.max_file_count,
+            min_free_space=config.extraction.min_free_space,
         )
         duration_ms = (time.monotonic() - t0) * 1000
         logger.info(

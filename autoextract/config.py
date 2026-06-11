@@ -56,6 +56,9 @@ class ExtractionConfig:
     password_file: Optional[str] = None
     recursive: bool = True
     max_recursion_depth: int = 5
+    max_extracted_size: int = 50 * 1024 * 1024 * 1024
+    max_file_count: int = 10000
+    min_free_space: int = 1024 * 1024 * 1024
 
     @classmethod
     def from_dict(cls, data: dict) -> "ExtractionConfig":
@@ -69,6 +72,9 @@ class ExtractionConfig:
             password_file=data.get("password_file"),
             recursive=_parse_bool(data.get("recursive", True)),
             max_recursion_depth=int(data.get("max_recursion_depth", 5)),
+            max_extracted_size=int(data.get("max_extracted_size", 50 * 1024 * 1024 * 1024)),
+            max_file_count=int(data.get("max_file_count", 10000)),
+            min_free_space=int(data.get("min_free_space", 1024 * 1024 * 1024)),
         )
 
 
