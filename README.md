@@ -1,93 +1,204 @@
-<!--Please do not remove this part-->
 ![Star Badge](https://img.shields.io/static/v1?label=%F0%9F%8C%9F&message=If%20Useful&style=style=flat&color=BC4E99)
 ![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)
-![Python](https://img.shields.io/badge/Python-3776AB.svg?style=for-the-badge&logo=Python&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB.svg?style=for-the-badge&logo=Python&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-blue.svg)
 
 # AutoExtract
 
+Automated multi-format archive extraction daemon. Watches folders for compressed archives and extracts them automatically — no manual unzipping required.
+
 ![](https://github.com/pratham2402/AutoExtract/blob/master/ReadMe%20Banner%20Design.png)
 
-<!--An image is an illustration for your project, the tip here is using your sense of humour as much as you can :D 
+## Features
 
-You can copy paste my markdown photo insert as following:
-<p align="center">
-<img src="your-source-is-here" width=40% height=40%>
--->
+- **Multi-format support** — ZIP, RAR, 7z, Tar, Tar.gz, Tar.bz2, ISO, CAB, and more
+- **Event-driven** — Uses inotify (via watchdog) for instant extraction; falls back to polling
+- **Recursive extraction** — Finds and extracts archives nested within archives
+- **Password support** — Password-protected archives via config or password file
+- **Webhook notifications** — Get notified on extraction success/failure via HTTP webhooks
+- **Configurable** — YAML config file with environment variable overrides
+- **Delete after extract** — Optionally remove archives after successful extraction
+- **Subfolder extraction** — Each archive extracted into its own folder
+- **Daemon-ready** — Systemd service file and Docker support included
+- **Graceful shutdown** — Signal handling for clean termination
 
-## 🛠️ Description
-<!--Remove the below lines and add yours -->
-AutoExtract is a Python-based tool that monitors a specified downloads folder for ZIP files and automatically extracts them to a designated directory. It keeps track of processed files to avoid duplicate extractions and runs continuously, checking for new ZIP files at regular intervals.
+## Quick Start
 
-Key Features:
+### Install
 
-    Monitors a folder for new ZIP files
-    Automatically extracts ZIP contents to a specified location
-    Keeps track of processed files to prevent redundant extractions
-    Customizable folder paths and checking intervals
-
-Ideal for automating repetitive unzipping tasks!
-
-## ⚙️ Languages or Frameworks Used
-<!--Remove the below lines and add yours -->
-Languages:
-
-    Python
-
-Frameworks/Modules:
-
-    os (for file and path operations)
-    zipfile (for handling ZIP file extraction)
-    time (for controlling the interval between folder check
-
-## 🌟 How to run
-<!--Remove the below lines and add yours -->
-**1. Fork the Repository:**
-   
-   - Navigate to the [AutoExtract GitHub repository](https://github.com/pratham2402/AutoExtract) and click the "Fork" button to create your own copy of the project.
-
-<b>2. Clone the Repository:</b>
-```
- git clone https://github.com/your-username/AutoExtract.git
-  ```
-   ``` 
+```bash
+git clone https://github.com/pratham2402/AutoExtract.git
 cd AutoExtract
- ```
-<b>3. Install Dependencies:</b>
-  - For Windows and macOS:
-    ```
-    pip install -r requirements.txt
-    ```
-  - For Linux:
-    1. Install the required package(s):
-       ```
-       sudo apt-get update && sudo apt-get install -y unrar
-       ```
-    2. Then install the Python dependencies:
-       ```
-       pip install -r requirements.txt
-       ```
 
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -e .
+```
 
-<b>4. Edit Paths: Open the script file and update the following paths with your specific folders:</b>
+Linux users also need the system `unrar` and `7z` binaries:
+```bash
+sudo apt-get update && sudo apt-get install -y unrar p7zip-full
+```
 
-  - downloads_folder: The folder where your ZIP files are downloaded.
-   
-  - unzip_to_folder: The folder where the extracted contents should go.
-   
-  - processed_files_file: The file path to store the list of processed files.
+### Configure
 
-<b>5. Run the Script:</b> 
- - You can run the script manually using - python3 AutoUnzip.py
+Edit `config.yaml` or set environment variables:
 
-<b>6. Set Up as a Service (Optional):</b> To have the script run automatically at startup, you can set it up as a systemd service on Linux systems. This ensures the script starts running in the background after your system boots.
+```yaml
+watch:
+  paths:
+    - ~/Downloads
+  patterns:
+    - "*.zip"
+    - "*.rar"
+    - "*.7z"
+    - "*.tar"
+    - "*.tar.gz"
+    - "*.tgz"
+    - "*.tar.bz2"
+    - "*.tbz2"
+  debounce_seconds: 5.0
 
-By following these steps, the AutoUnzip script will be up and running, automating the extraction of ZIP files in your specified directory.
+extraction:
+  extract_to_subfolder: true
+  delete_after: false
+  recursive: true
+  max_recursion_depth: 5
+```
 
+### Run
 
-<!--## 📺 Demo
-Add a Screenshot/GIF showing the sample use of the script (jpeg/png/gif).-->
+```bash
+python -m autoextract
+```
 
+Or use the entry point after installing:
+```bash
+autoextract
+```
 
-## 🤖 Author
-<!--Remove the below lines and add yours -->
-[Pratham2402](https://github.com/pratham2402)
+## Configuration Reference
+
+### Watch section
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `paths` | list | `[~/Downloads]` | Directories to monitor |
+| `recursive` | bool | `false` | Watch subdirectories recursively |
+| `patterns` | list | `*.zip, *.rar, *.7z, *.tar, *.tar.gz, *.tgz, *.tar.bz2, *.tbz2` | File patterns to match |
+| `polling_interval` | int | `10` | Seconds between polls (when watchdog unavailable) |
+| `debounce_seconds` | float | `5.0` | Wait for file to stop changing before extracting |
+
+### Extraction section
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `output_dir` | str | `null` | Extraction target directory (null = same as source) |
+| `extract_to_subfolder` | bool | `true` | Create subfolder named after archive |
+| `delete_after` | bool | `false` | Delete archive after successful extraction |
+| `keep_on_failure` | bool | `true` | Keep archive if extraction fails (only relevant with delete_after) |
+| `password` | str | `null` | Global password for encrypted archives |
+| `password_file` | str | `null` | Path to file with passwords to try (one per line) |
+| `recursive` | bool | `true` | Extract archives found within extracted content |
+| `max_recursion_depth` | int | `5` | Maximum nesting depth for recursive extraction |
+
+### Webhooks section
+
+```yaml
+webhooks:
+  - url: "https://example.com/hook"
+    events: ["extraction_success", "extraction_failure"]
+    timeout: 30
+    retries: 3
+```
+
+Events: `extraction_start`, `extraction_success`, `extraction_failure`
+
+### Logging section
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `level` | str | `INFO` | Log level (DEBUG, INFO, WARNING, ERROR) |
+| `file` | str | `null` | Log file path (null = stdout) |
+| `format` | str | `%(asctime)s - %(name)s - %(levelname)s - %(message)s` | Log format string |
+
+## Environment Variables
+
+All settings can be overridden with `AUTOEXTRACT_` prefixed env vars:
+
+```bash
+export AUTOEXTRACT_CONFIG=/path/to/config.yaml
+export AUTOEXTRACT_WATCH_PATHS="/watch/dir1,/watch/dir2"
+export AUTOEXTRACT_EXTRACTION_OUTPUT_DIR=/output
+export AUTOEXTRACT_EXTRACTION_DELETE_AFTER=true
+export AUTOEXTRACT_EXTRACTION_PASSWORD=secret
+export AUTOEXTRACT_LOG_LEVEL=DEBUG
+export AUTOEXTRACT_WEBHOOK_URL=https://hooks.example.com/notify
+```
+
+## Systemd Service
+
+```bash
+sudo cp autoextract.service /etc/systemd/system/
+sudo mkdir -p /etc/autoextract
+sudo cp config.yaml /etc/autoextract/
+sudo systemctl daemon-reload
+sudo systemctl enable --now autoextract
+```
+
+## Docker
+
+```bash
+docker compose up -d
+```
+
+Or manually:
+
+```bash
+docker build -t autoextract .
+docker run -d \
+  -v ~/Downloads:/watch \
+  -v ./extracted:/output \
+  -v ./config.yaml:/etc/autoextract/config.yaml:ro \
+  autoextract
+```
+
+## Supported Formats
+
+| Format | Extension | Backend |
+|--------|-----------|---------|
+| ZIP | `.zip` | stdlib `zipfile` |
+| RAR | `.rar`, `.cbr` | `rarfile` + `unrar` |
+| 7-Zip | `.7z` | `py7zr` |
+| ISO | `.iso` | `py7zr` |
+| CAB | `.cab` | `py7zr` |
+| Tar | `.tar` | stdlib `tarfile` |
+| Tar.gz | `.tar.gz`, `.tgz` | stdlib `tarfile` |
+| Tar.bz2 | `.tar.bz2`, `.tbz2` | stdlib `tarfile` |
+| Tar.xz | `.tar.xz`, `.txz` | stdlib `tarfile` |
+| Tar.zst | `.tar.zst`, `.tzst` | stdlib `tarfile` |
+
+## Project Structure
+
+```
+AutoExtract/
+├── autoextract/
+│   ├── __init__.py       # Package version
+│   ├── __main__.py       # Entry point
+│   ├── config.py         # YAML + env var configuration
+│   ├── extractors.py     # Multi-format extraction engine
+│   ├── monitor.py        # Watchdog + polling folder monitor
+│   └── webhooks.py       # HTTP notification callbacks
+├── config.yaml           # Default configuration
+├── setup.py              # Package installer
+├── Dockerfile
+├── docker-compose.yml
+├── autoextract.service   # systemd unit file
+├── requirements.txt
+├── LICENSE
+└── README.md
+```
+
+## Author
+
+[Pratham Sardana](https://github.com/pratham2402)
